@@ -1,2 +1,2 @@
 # snapsave
-Scraper tool for snapsave.app, a website for download facebook video
+Scraper tool for https://snapsave.app, a website for download facebook video

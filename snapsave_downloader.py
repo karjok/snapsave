@@ -16,7 +16,7 @@ accept-language: id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7
 cache-control: max-age=0
 content-length: 64
 content-type: application/x-www-form-urlencoded
-cookie: _ga=GA1.2.1488822026.1667182754; _gid=GA1.2.65632635.1667182754; __atuvc=4%7C44; __atuvs=635f383a9a2f91a6001; _gat=1
+cookie: _ga=GA1.2.1509060997.165677849; __gads=ID=14bf8adad89d006c-2262a93930d500d1:T=1657716831:RT=1657716831:S=ALNI_Ma89sSwxwGFETAXf0SaugcMNkWP4Q; __atssc=google;13; __gpi=UID=000007abf8eb7d95:T=1657716831:RT=1668338163:S=ALNI_MbquR5QL9MufCzkyUL_ouvJAzWFkA; __atuvc=0|43,10|44,0|45,1|46,1|47
 origin: https://snapsave.app
 referer: https://snapsave.app/
 sec-ch-ua: "Chromium";v="106", "Google Chrome";v="106", "Not;A=Brand";v="99"
@@ -36,15 +36,21 @@ user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 
 	# snapsave server return encoded javascript code
 	raw_result_contain_js = post(snapsave_url,data=post_data,headers=header).text
-	the_js_result = re.search(r"javascript\">(.*?)<\/script>",raw_result_contain_js).group(1)
+	try:
+		the_js_result = re.search(r"javascript\">(.*?)<\/script>",raw_result_contain_js).group(1)
+	except:
+		the_js_result = raw_result_contain_js
 
-	# translate the encoded javascript code to readable code using https://onecompiler.com/javascript/
-	translated_js = JSRunner(the_js_result)
+	try:
+		# translate the encoded javascript code to readable code using https://onecompiler.com/javascript/
+		translated_js = JSRunner(the_js_result)
 
-	# then get download url (higher quality video)
-	url_result = re.search(r"href=\\\\\\\"(http.*?)\\\\\\\"",translated_js).group(1)
+		# then get download url (higher quality video)
+		url_result = re.search(r"href=\\\\\\\"(http.*?)\\\\\\\"",translated_js).group(1)
 
-	return url_result
+		return url_result
+	except:
+		return None
 
 def JSRunner(js_string):
 	# get token from https://onecompiler.com/javascript/
